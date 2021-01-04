@@ -1,5 +1,7 @@
 #include <QKeyEvent>
+#if QT_VERSION_MAJOR < 6
 #include <QtPlatformHeaders/QWindowsWindowFunctions>
+#endif
 
 #include "ui/EditorContext.hpp"
 #include "ui/FullscreenWidget.hpp"
@@ -15,8 +17,11 @@ FullscreenWidget::FullscreenWidget(QWidget* parent)
 	//This has to be a native window for there to be a window handle
 	setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
 
+	//TODO - Investigate if that is still the case with Qt 6
+#if QT_VERSION_MAJOR < 6
 	//Without this going fullscreen will cause black flickering
 	QWindowsWindowFunctions::setHasBorderInFullScreen(this->windowHandle(), true);
+#endif
 }
 
 FullscreenWidget::~FullscreenWidget() = default;
