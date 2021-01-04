@@ -517,7 +517,11 @@ void StudioModelTexturesPanel::OnTextureNameChanged()
 
 void StudioModelTexturesPanel::OnTextureNameRejected()
 {
+#if QT_VERSION_MAJOR >= 6
+	QToolTip::showText(_ui.TextureName->mapToGlobal(QPoint(0, -20)), "Texture names must be unique");
+#else
 	QToolTip::showText(_ui.TextureName->mapToGlobal({0, -20}), "Texture names must be unique");
+#endif
 }
 
 void StudioModelTexturesPanel::OnChromeChanged()

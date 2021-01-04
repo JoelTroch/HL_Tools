@@ -291,7 +291,11 @@ void StudioModelBonesPanel::OnBoneNameChanged()
 
 void StudioModelBonesPanel::OnBoneNameRejected()
 {
+#if QT_VERSION_MAJOR >= 6
+	QToolTip::showText(_ui.BoneName->mapToGlobal(QPoint(0, -20)), "Bone names must be unique");
+#else
 	QToolTip::showText(_ui.BoneName->mapToGlobal({0, -20}), "Bone names must be unique");
+#endif
 }
 
 void StudioModelBonesPanel::OnBoneParentChanged(int index)

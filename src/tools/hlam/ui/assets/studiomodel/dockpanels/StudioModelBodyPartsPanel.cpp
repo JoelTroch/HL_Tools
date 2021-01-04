@@ -435,7 +435,11 @@ void StudioModelBodyPartsPanel::OnModelNameChanged()
 
 void StudioModelBodyPartsPanel::OnModelNameRejected()
 {
+#if QT_VERSION_MAJOR >= 6
+	QToolTip::showText(_ui.ModelName->mapToGlobal(QPoint(0, -20)), "Model names must be unique");
+#else
 	QToolTip::showText(_ui.ModelName->mapToGlobal({0, -20}), "Model names must be unique");
+#endif
 }
 
 void StudioModelBodyPartsPanel::OnBoneControllerChanged(int index)

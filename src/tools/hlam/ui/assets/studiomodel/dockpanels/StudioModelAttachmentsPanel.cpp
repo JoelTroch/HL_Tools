@@ -252,7 +252,11 @@ void StudioModelAttachmentsPanel::OnNameChanged()
 
 void StudioModelAttachmentsPanel::OnNameRejected()
 {
+#if QT_VERSION_MAJOR >= 6
+	QToolTip::showText(_ui.Name->mapToGlobal(QPoint(0, -20)), "Attachment names must be unique");
+#else
 	QToolTip::showText(_ui.Name->mapToGlobal({0, -20}), "Attachment names must be unique");
+#endif
 }
 
 void StudioModelAttachmentsPanel::OnTypeChanged()
