@@ -2,7 +2,11 @@
 #include <unordered_map>
 
 #include <QApplication>
+#if QT_VERSION_MAJOR >= 6
+#include <QScreen>
+#else
 #include <QDesktopWidget>
+#endif
 
 #include "qt/HashFunctions.hpp"
 
@@ -23,7 +27,11 @@ OptionsDialog::OptionsDialog(EditorContext* editorContext, QWidget* parent)
 	_ui.setupUi(this);
 
 	//Set the dialog size to a fraction of the current screen
+#if QT_VERSION_MAJOR >= 6
+	const QRect screenSize = QApplication::primaryScreen()->geometry();
+#else
 	const QRect screenSize = QApplication::desktop()->screenGeometry(this);
+#endif
 
 	this->resize(static_cast<int>(std::ceil(screenSize.width() * 0.9)), static_cast<int>(std::ceil(screenSize.height() * 0.9)));
 

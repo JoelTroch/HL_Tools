@@ -1,6 +1,8 @@
 #include <QApplication>
 #include <QBoxLayout>
+#if QT_VERSION_MAJOR < 6
 #include <QDesktopWidget>
+#endif
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QScrollBar>
@@ -19,7 +21,11 @@ CommandLineFrontEnd::CommandLineFrontEnd(EditorContext* editorContext, QWidget* 
 	_ui.setupUi(this);
 
 	//Set the dialog size to a fraction of the current screen
+#if QT_VERSION_MAJOR >= 6
+	const QRect screenSize = QApplication::primaryScreen()->geometry();
+#else
 	const QRect screenSize = QApplication::desktop()->screenGeometry(this);
+#endif
 
 	this->resize(static_cast<int>(std::ceil(screenSize.width() * 0.9)), static_cast<int>(std::ceil(screenSize.height() * 0.9)));
 
