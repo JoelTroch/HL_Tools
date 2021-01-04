@@ -4,7 +4,11 @@
 
 #include <GL/glew.h>
 
+#if QT_VERSION_MAJOR >= 6
+#include <QtOpenGL/QOpenGLWindow>
+#else
 #include <QOpenGLWindow>
+#endif
 
 #include "graphics/IGraphicsContext.hpp"
 
