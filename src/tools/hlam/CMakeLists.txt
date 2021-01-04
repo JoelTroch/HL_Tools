@@ -36,7 +36,11 @@ if (MSVC)
 		@ONLY)
 endif()
 
-add_executable(HLAM WIN32)
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+	qt_add_executable(HLAM WIN32)
+else()
+	add_executable(HLAM WIN32)
+endif()
 
 target_include_directories(HLAM
 	PRIVATE
@@ -58,8 +62,8 @@ target_compile_definitions(HLAM
 
 target_link_libraries(HLAM
 	PRIVATE
-		Qt5::Widgets
-		Qt5::Network
+		Qt${QT_VERSION_MAJOR}::Widgets
+		Qt${QT_VERSION_MAJOR}::Network
 		${GLEW}
 		OpenGL::GL
 		OpenAL::OpenAL
@@ -120,29 +124,29 @@ add_custom_command(TARGET HLAM POST_BUILD
 # Copy the Qt libraries over automatically
 add_custom_command(TARGET HLAM POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:Qt5::Core>
+        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Core>
         $<TARGET_FILE_DIR:HLAM>)
 
 add_custom_command(TARGET HLAM POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:Qt5::Gui>
+        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Gui>
         $<TARGET_FILE_DIR:HLAM>)
 
 add_custom_command(TARGET HLAM POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:Qt5::Widgets>
+        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Widgets>
         $<TARGET_FILE_DIR:HLAM>)
 
 add_custom_command(TARGET HLAM POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:Qt5::Network>
+        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Network>
         $<TARGET_FILE_DIR:HLAM>)
 
 # Copy plugins so the program can run
-copy_qt_dependencies(HLAM Qt5Core_PLUGINS)
-copy_qt_dependencies(HLAM Qt5Gui_PLUGINS)
-copy_qt_dependencies(HLAM Qt5Widgets_PLUGINS)
-copy_qt_dependencies(HLAM Qt5Network_PLUGINS)
+copy_qt_dependencies(HLAM Qt${QT_VERSION_MAJOR}Core_PLUGINS)
+copy_qt_dependencies(HLAM Qt${QT_VERSION_MAJOR}Gui_PLUGINS)
+copy_qt_dependencies(HLAM Qt${QT_VERSION_MAJOR}Widgets_PLUGINS)
+copy_qt_dependencies(HLAM Qt${QT_VERSION_MAJOR}Network_PLUGINS)
 
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT HLAM)
 

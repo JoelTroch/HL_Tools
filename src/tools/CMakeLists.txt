@@ -11,7 +11,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # Find the QtWidgets library
-find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
 
 function(copy_qt_dependencies target_name plugins)
 	foreach(plugin ${${plugins}})
