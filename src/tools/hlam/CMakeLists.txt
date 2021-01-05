@@ -1,3 +1,7 @@
+if(NOT WIN32)
+	include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindVorbis.cmake)
+endif()
+
 find_package(OpenGL REQUIRED)
 
 # Disable module based lookup (OpenAL Soft uses CONFIG mode and MODULE mode only works with the Creative Labs version)
@@ -5,25 +9,27 @@ find_package(OpenAL REQUIRED NO_MODULE)
 
 if(WIN32)
 	find_library(GLEW glew32 PATHS ${EXTERNAL_DIR}/GLEW/lib)
+
+	add_library(Ogg STATIC IMPORTED)
+
+	set_target_properties(Ogg PROPERTIES IMPORTED_LOCATION ${EXTERNAL_DIR}/ogg/lib/libogg_static.lib)
+
+	target_include_directories(Ogg INTERFACE ${EXTERNAL_DIR}/ogg/include)
+
+	add_library(Vorbis STATIC IMPORTED)
+
+	set_target_properties(Vorbis PROPERTIES IMPORTED_LOCATION ${EXTERNAL_DIR}/vorbis/lib/libvorbis_static.lib)
+
+	target_include_directories(Vorbis INTERFACE ${EXTERNAL_DIR}/vorbis/include)
+
+	add_library(VorbisFile STATIC IMPORTED)
+
+	set_target_properties(VorbisFile PROPERTIES IMPORTED_LOCATION ${EXTERNAL_DIR}/vorbis/lib/libvorbisfile_static.lib)
 else()
 	find_library(GLEW libGLEW.so.2.0.0 PATHS ${EXTERNAL_DIR}/GLEW/lib)
+
+	find_package(Ogg REQUIRED)
 endif()
-
-add_library(Ogg STATIC IMPORTED)
-
-set_target_properties(Ogg PROPERTIES IMPORTED_LOCATION ${EXTERNAL_DIR}/ogg/lib/libogg_static.lib)
-
-target_include_directories(Ogg INTERFACE ${EXTERNAL_DIR}/ogg/include)
-
-add_library(Vorbis STATIC IMPORTED)
-
-set_target_properties(Vorbis PROPERTIES IMPORTED_LOCATION ${EXTERNAL_DIR}/vorbis/lib/libvorbis_static.lib)
-
-target_include_directories(Vorbis INTERFACE ${EXTERNAL_DIR}/vorbis/include)
-
-add_library(VorbisFile STATIC IMPORTED)
-
-set_target_properties(VorbisFile PROPERTIES IMPORTED_LOCATION ${EXTERNAL_DIR}/vorbis/lib/libvorbisfile_static.lib)
 
 set(HLAM_VERSION_MAJOR 1)
 set(HLAM_VERSION_MINOR 0)
@@ -56,6 +62,12 @@ target_compile_definitions(HLAM
 			FILE_OFFSET_BITS=64>
 		IS_LITTLE_ENDIAN=${IS_LITTLE_ENDIAN_VALUE})
 
+if(WIN32)
+	set(AUDIO_DEPS Ogg Vorbis VorbisFile)
+else()
+	set(AUDIO_DEPS Ogg::ogg ${VORBIS_LIBRARIES})
+endif()
+
 target_link_libraries(HLAM
 	PRIVATE
 		Qt5::Widgets
@@ -64,9 +76,7 @@ target_link_libraries(HLAM
 		OpenGL::GL
 		OpenAL::OpenAL
 		$<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:dl>
-		Ogg
-		Vorbis
-		VorbisFile
+		${AUDIO_DEPS}
 		EnTT::EnTT)
 
 target_compile_options(HLAM
