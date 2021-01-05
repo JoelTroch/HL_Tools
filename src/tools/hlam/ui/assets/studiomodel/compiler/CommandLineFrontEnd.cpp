@@ -1,3 +1,7 @@
+#ifndef WIN32
+#include <cmath> // std::ceil
+#endif
+
 #include <QApplication>
 #include <QBoxLayout>
 #include <QDesktopWidget>

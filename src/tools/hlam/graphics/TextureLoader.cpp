@@ -1,3 +1,6 @@
+#ifndef WIN32
+#include <cstring> // memcpy
+#endif
 #include <vector>
 
 #include "graphics/Palette.hpp"
